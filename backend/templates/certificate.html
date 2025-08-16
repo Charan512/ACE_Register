@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ACE Membership Certificate</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 0;
+    }
+    html, body {
+      width: 210mm;
+      height: 297mm;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }    
+    
+
+    .certificate {
+      width: 21cm;
+      height: 29.7cm;
+      position: relative;
+      background-image: url("bg1.jpg");
+      background-size: 21cm 29.7cm;
+      background-repeat: no-repeat;
+      background-position: center top;
+      display: flex;
+      flex-direction: column;
+      margin: 0 auto;
+      padding-top: 0.5cm;
+      page-break-after:avoid;
+    }
+
+    .content {
+      padding: 4.3cm 3cm 2.5cm 3cm;
+      box-sizing: border-box;
+    }
+
+    .association-title {
+      font-size: 24px;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 25px;
+    }
+    .details {
+      border-left: 4px;
+      padding: 10px 15px;
+      margin-top: -20px;
+    }
+    .signatures {
+      position: absolute;
+      left: 1.2cm;
+      bottom: 1.5cm;
+      width: calc(100% - 2.4cm);
+      display: flex;
+      justify-content: space-between;
+    }
+    .signature {
+      bottom: 1cm;
+      text-align: center;
+      width: 40%;
+      display: flex;
+      flex-direction: column;
+    }
+    .text-content {
+      margin-top:-10px;
+      line-height: 1.5;
+      text-align: justify;
+      padding:2px;
+    }
+
+    .placeholder {
+      color: #0066cc;
+      font-weight: bold;
+    }
+
+    .name-line {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+  <div class="certificate">
+    <div class="content">
+      <div class="association-title">
+        Welcome Letter
+      </div>
+      <div class="name-line">
+        <p>Dear <span class="placeholder"><%= name %></span>,</p>
+        <p>ID: <span class="placeholder"><%= ace_id %></span></p>
+      </div>
+      
+      <div class="text-content">
+        <p>We, ACE are glad to inform you that you have been approved as a valuable member of<b>
+        ASSOCIATION OF COMPUTER ENGINEERS (ACE)</b> of <b>COMPUTER SCIENCE AND
+        ENGINEERING</b>. This letter of identification will act as an invoice for membership payment, ACE
+        identification data, and a viable proof that you are a member of ACE. We hope that this will help you
+        build the confidence and skill that you need for your success.</p>
+      </div>
+      
+      <div class="details">
+        <h3>SUBMITTED DETAILS</h3>
+        <p>ACE Regd.NO : <span class="placeholder"><%= ace_id %></span></p>
+        <p>Name : <span class="placeholder"><%= name %></span></p>
+        <p>Phone Number : <span class="placeholder"><%= phone %></span></p>
+        <p>Email : <span class="placeholder"><%= email %></span></p>
+        <p>Year Of Study : <span class="placeholder"><%= year %></span></p>
+        <p>Gender : <span class="placeholder"><%= gender %></span></p>
+        <p>Department : <span class="placeholder"><%= branch %></span></p>
+        <p>Interests : <span class="placeholder"><%= interests %></span></p>
+        <p>Goodies : <span class="placeholder"><%= goodies %></span></p>
+        <p>Payment Mode : <span class="placeholder"><%= payment %></span></p><br>
+        <p><b>This invoice declares that the above information submitted is true.</b></p>
+      </div>
+    </div>
+    <div class="signatures">
+      <div class="signature">
+        <img src="hod_sign.png" style="height: 50px;">        
+        <div>(Head of CSE Dept)</div>
+      </div>
+      <div class="signature">
+        <img src="sec_sign.png" style="height: 50px;">
+        <div>(Secretary of ACE)</div>
+      </div>
+    </div>  
+</body>
+</html>

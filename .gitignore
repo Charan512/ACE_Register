@@ -1,0 +1,24 @@
+# === Secrets (DO NOT COMMIT) ===
+/backend/cred.env
+/backend/credentials.json
+/backend/members.db
+
+# === Environment files ===
+.env
+*.env
+.env.*.local
+
+# === Node modules ===
+node_modules/
+
+# === Build outputs ===
+project/dist/
+backend/dist/
+dist/
+build/
+
+# === OS / Editor junk ===
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
