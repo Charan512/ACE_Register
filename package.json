@@ -1,0 +1,24 @@
+{
+  "name": "ace_register",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "concurrently \"npm run dev --prefix project\" \"node backend/server.js\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Charan512/ACE_Register.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Charan512/ACE_Register/issues"
+  },
+  "homepage": "https://github.com/Charan512/ACE_Register#readme",
+  "description": "",
+  "devDependencies": {
+    "concurrently": "^9.2.0"
+  }
+}

@@ -1,4 +1,5 @@
-require('dotenv').config({ path: './cred.env' });
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, 'cred.env') });
 const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
 const { google } = require('googleapis');
@@ -7,7 +8,6 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const nodemailer = require('nodemailer');
 const ejs = require('ejs');
-const path = require('path');
 const puppeteer = require('puppeteer');
 const app = express();
 app.use('/assets', express.static(path.join(__dirname, 'templates')));
