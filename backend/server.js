@@ -8,7 +8,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const nodemailer = require('nodemailer');
 const ejs = require('ejs');
-const puppeteer = require('puppeteer');
+const puppeteer = require('puppeteer-core');
 const app = express();
 app.use('/assets', express.static(path.join(__dirname, 'templates')));
 const PORT = 5001;
