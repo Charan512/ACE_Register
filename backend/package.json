@@ -19,7 +19,7 @@
     "googleapis": "^154.1.0",
     "html-pdf": "^3.0.1",
     "nodemailer": "^7.0.5",
-    "puppeteer": "^24.16.0",
+    "puppeteer-core": "^24.16.0",
     "sqlite3": "^5.1.7"
   }
 }
