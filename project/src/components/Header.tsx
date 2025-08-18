@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Instagram, Linkedin } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -44,25 +44,6 @@ const Header = () => {
               </span>
             </div>
           </div>
-
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
-            {['Home', 'About', 'Events', 'Register', 'Contact'].map((item) => (
-              <button
-                key={item}
-                onClick={() => scrollToSection(item.toLowerCase())}
-                className={`font-semibold text-sm uppercase tracking-wide transition-all duration-300 hover:scale-105 ${
-                  isScrolled 
-                    ? 'text-gray-900 hover:text-blue-600' 
-                    : 'text-white hover:text-blue-300'
-                } relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-blue-500 after:transition-all after:duration-300 hover:after:w-full`}
-              >
-                {item}
-              </button>
-            ))}
-          </nav>
-
-
           {/* Mobile Menu Button */}
           <button
             className={`md:hidden p-2 rounded-lg transition-all duration-300 ${

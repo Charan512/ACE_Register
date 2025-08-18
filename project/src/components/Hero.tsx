@@ -14,23 +14,19 @@ const Hero = () => {
       id="home" 
       className="relative min-h-screen flex items-center justify-center overflow-hidden"
       style={{
-        backgroundImage: 'url("https://res.cloudinary.com/domogztsv/image/upload/v1753600535/WhatsApp_Image_2025-07-26_at_1.35.18_PM_qis1fb.jpg")',
-        backgroundSize: 'cover',
+        backgroundSize: 'cover',backgroundColor:'#87CEEB',
         backgroundPosition: 'center center',
         backgroundRepeat: 'no-repeat',
         backgroundAttachment: 'fixed'
       }}
     >
-      {/* Overlay for better text readability */}
       <div className="absolute inset-0 bg-black/30"></div>
-      
-      {/* Content */}
       <div className="relative z-10 text-center text-white px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
         <div className="mb-8">
           <img 
             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3_eQb1bwb-FBrRt1TwBDc4YGc8N1fuSziaA&s" 
             alt="ACE Logo" 
-            className="h-20 w-20 sm:h-24 sm:w-24 mx-auto mb-6 rounded-full border-4 border-white/30 shadow-2xl backdrop-blur-sm"
+            className="h-20 w-20 sm:h-24 sm:w-24 mt-11 mx-auto mb-6 rounded-full border-4 border-white/30 shadow-2xl backdrop-blur-sm"
           />
         </div>
         
