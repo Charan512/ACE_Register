@@ -1,22 +1,23 @@
 const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, 'cred.env') });
 const express = require('express');
-const INV_SERVER_URL = process.env.INV_SERVER_URL;
-const axios = require('axios');
 const sqlite3 = require('sqlite3').verbose();
 const { google } = require('googleapis');
 const fs = require('fs');
 const cors = require('cors');
+const axios = require('axios');
 const bodyParser = require('body-parser');
 const nodemailer = require('nodemailer');
 const ejs = require('ejs');
-const puppeteer = require('puppeteer-core');
+const puppeteer = require('puppeteer');
 const app = express();
 app.use('/assets', express.static(path.join(__dirname, 'templates')));
 const PORT = 5001;
 const templateDir = path.join(__dirname, 'templates');
+
 app.use(cors());
 app.use(bodyParser.json());
+
 const db = new sqlite3.Database('./members.db', (err) => {
   if (err) return console.error('DB connection error:', err.message);
   console.log('Connected to members.db');
@@ -42,7 +43,9 @@ const auth = new google.auth.GoogleAuth({
   credentials: require('./credentials.json'),
   scopes: ['https://www.googleapis.com/auth/spreadsheets'],
 });
+
 const sheets = google.sheets({ version: 'v4', auth });
+
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -50,6 +53,7 @@ const transporter = nodemailer.createTransport({
     pass: process.env.EMAIL_PASS,
   },
 });
+
 function generateACEID(callback) {
   db.get(
     `SELECT ace_id FROM registrations ORDER BY ROWID DESC LIMIT 1`,
@@ -62,18 +66,9 @@ function generateACEID(callback) {
         newId = `25ACEC${nextNum}`;
       }
       callback(null, newId);
-    }
-  );
+    });
 }
-async function getInviteLink(email) {
-  try {
-    const response = await axios.post(`${INV_SERVER_URL}/generate`, { email });
-    return response.data.link;
-  } catch (err) {
-    console.error("Error getting invite link:", err.message);
-    return null;
-  }
-}
+
 async function generatePDF(renderedHtml) {
   let browser;
   try {
@@ -103,7 +98,8 @@ async function generatePDF(renderedHtml) {
         waitUntil: 'load',
         timeout: 60000
       });
-    } 
+    }
+  
     await page.evaluate(async () => {
       await new Promise((resolve) => {
         if (document.readyState === 'complete') {
@@ -113,22 +109,25 @@ async function generatePDF(renderedHtml) {
         }
       });
     });
+    
     const buffer = await page.pdf({
       format: 'A4',
       printBackground: true,
       margin: { top: '0cm', right: '0cm', bottom: '0cm', left: '0cm' },
       timeout: 60000
     });
+    
     return buffer;
   } catch (error) {
     console.error('PDF generation error:', error);
     throw error;
- } finally {
+  } finally {
     if (browser) {
       await browser.close();
     }
   }
 }
+
 app.post('/register', async (req, res) => {
   try {
     const formData = req.body;
@@ -228,65 +227,35 @@ app.post('/register', async (req, res) => {
                 basePath: path.join(__dirname, 'templates'),
               });
               const buffer = await generatePDF(renderedHtml);
-              const inviteLink = await getInviteLink(email);
-              const emailBody = `<div style="font-family: Arial, sans-serif; color: #333; line-height: 1.6;">
-                                <div style="text-align: center; margin-bottom: 20px;">
-                                <img src="cid:aceLogo" alt="ACE Logo" style="max-width:150px; width:100%; height:auto; display:block; margin:0 auto;" />
-                                </div>
-                                <p>Dear ${name},</p>
-                                <p>We're absolutely thrilled to welcome you to the <strong>ACE</strong> community! 🌟 Your registration is officially complete, and a brand new chapter of creativity, collaboration, and connection begins today!</p>
-                                <p>From all of us at ACE — thank you for joining us. You're now part of a vibrant and growing family that celebrates ideas, empowers innovation, and believes in lifting each other higher.</p>
-                                <p>As a member of ACE, you'll have access to:</p>
-                                <ul>
-                                  <li>✨ Inspiring events and workshops</li>
-                                  <li>🤝 A network of passionate changemakers</li>
-                                  <li>🚀 Opportunities to lead, learn, and grow</li>
-                                  <li>🎯 A platform to turn your ideas into impact</li>
-                                </ul>
-                                <p>This is more than a registration. It's an invitation to belong, to thrive, and to shine — and we can't wait to see the amazing things you'll bring to the table!</p>
-                                <p>Once again, welcome aboard — your ACE journey starts now!</p>
-                                <p>Warm wishes,<br>The ACE Team<br><em>Where Ambition Meets Action</em></p>
-                                <p>Join our WhatsApp group: <a href="${inviteLink}">${inviteLink}</a></p>
-                                <p><b>This is one time use link make sure to join in first try!!!</b></p>
-                                <div style="margin-top:20px; text-align:center;">
-                                  <h3 style="margin-bottom:15px; font-size:16px; color:#333;">Contact Us</h3>
-                                  <div style="display:flex; justify-content:center; gap:30px;">
-                                    <a href="https://www.instagram.com/srkr_ace?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" 
-                                       style="text-decoration:none; color:#000; text-align:center;">
-                                      <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" 
-                                           alt="Instagram" width="30" height="30" style="display:block; margin:auto;" />
-                                      <div style="font-size:12px; margin-top:5px;">Instagram</div>
-                                    </a>
-                                
-                                    <!-- LinkedIn -->
-                                    <a href="https://www.linkedin.com/company/association-of-computer-engineers-ace/" 
-                                       style="text-decoration:none; color:#000; text-align:center;">
-                                      <img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" 
-                                           alt="LinkedIn" width="30" height="30" style="display:block; margin:auto;" />
-                                      <div style="font-size:12px; margin-top:5px;">LinkedIn</div>
-                                    </a>
-                                    <a href="https://whatsapp.com/channel/0029VaA6ohD2kNFpm5oRiu1B" 
-                                       style="text-decoration:none; color:#000; text-align:center;">
-                                      <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" 
-                                           alt="WhatsApp" width="30" height="30" style="display:block; margin:auto;" />
-                                      <div style="font-size:12px; margin-top:5px;">WhatsApp</div>
-                                    </a>
-                                  </div>
-                                </div>`;
+              const response = await axios.get(`${process.env.INV_SERVER_URL}/generate`);
+              const inviteLink = response.data.link;
+              const emailBody = `
+                <p>Dear ${name},</p>
+                <p>We're absolutely thrilled to welcome you to the <strong>ACE</strong> community! 🌟 Your registration is officially complete, and a brand new chapter of creativity, collaboration, and connection begins today!</p>
+                <p>From all of us at ACE — thank you for joining us. You're now part of a vibrant and growing family that celebrates ideas, empowers innovation, and believes in lifting each other higher.</p>
+                <p>As a member of ACE, you'll have access to:</p>
+                <ul>
+                  <li>✨ Inspiring events and workshops</li>
+                  <li>🤝 A network of passionate changemakers</li>
+                  <li>🚀 Opportunities to lead, learn, and grow</li>
+                  <li>🎯 A platform to turn your ideas into impact</li>
+                </ul>
+                <p>This is more than a registration. It's an invitation to belong, to thrive, and to shine — and we can't wait to see the amazing things you'll bring to the table!</p>
+                <p>Once again, welcome aboard — your ACE journey starts now!</p>
+                <p>Warm wishes,<br>The ACE Team<br><em>Where Ambition Meets Action</em></p>
+                <p>Join our WhatsApp group: <a href="${inviteLink}">${inviteLink}</a></p>
+                <p><b>This is one time use link make sure to join in first try!!!</b></p>
+              `;
               await transporter.sendMail({
                 from: process.env.EMAIL_USER,
                 to: email,
                 subject: 'ACE Registration Confirmation with Certificate',
                 html: emailBody,
                 attachments: [{
-                    filename: 'certificate.pdf',
-                    content: buffer,
-                    contentType: 'application/pdf',
-                  },{
-                    filename: 'ace.png',
-                    path: path.join(__dirname, 'templates', 'ace.png'),
-                    cid: 'aceLogo'
-                  }],
+                  filename: 'certificate.pdf',
+                  content: buffer,
+                  contentType: 'application/pdf',
+                }],
               });
               console.log(`Registered & Emailed: ${ace_id}`);
               res.status(200).json({ success: true, ace_id });
@@ -303,6 +272,7 @@ app.post('/register', async (req, res) => {
     res.status(500).json({ error: 'Unknown error occurred' });
   }
 });
+
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });

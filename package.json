@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node backend/server.js"
+    "start:backend": "node backend/server.js",
+    "start:frontend": "cd project && npm run dev",
+    "start:all": "concurrently \"npm run start:backend\" \"npm run start:frontend\""
   },
   "repository": {
     "type": "git",
@@ -23,9 +24,11 @@
     "ejs": "^3.1.10",
     "express": "^5.1.0",
     "googleapis": "^154.1.0",
-    "html-pdf": "^3.0.1",
     "nodemailer": "^7.0.5",
     "puppeteer": "^24.16.0",
     "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.0"
   }
 }
