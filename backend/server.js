@@ -1,6 +1,8 @@
 const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, 'cred.env') });
 const express = require('express');
+const INV_SERVER_URL = process.env.INV_SERVER_URL;
+const axios = require('axios');
 const sqlite3 = require('sqlite3').verbose();
 const { google } = require('googleapis');
 const fs = require('fs');
@@ -35,17 +37,6 @@ db.run(
     timestamp TEXT
   );`
 );
-  db.run(`
-  CREATE TABLE IF NOT EXISTS invite_tokens (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    acid TEXT UNIQUE,
-    used INTEGER DEFAULT 0,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-  );
-`,
-  (err) => {
-    if (err) console.error('Table creation error:', err.message);
-  });
 });
 const auth = new google.auth.GoogleAuth({
   credentials: require('./credentials.json'),
@@ -70,17 +61,18 @@ function generateACEID(callback) {
         const nextNum = (lastNum + 1).toString().padStart(3, '0');
         newId = `25ACEC${nextNum}`;
       }
-      const inviteToken = newId;
-      const insertTokenQuery = `
-        INSERT INTO invite_tokens (acid, used)
-        VALUES (?, 0)
-      `;
-      db.run(insertTokenQuery, [inviteToken], (err) => {
-        if (err) return callback(err);
-        console.log('Invite token saved for:', inviteToken);
       callback(null, newId);
-    });
-  });
+    }
+  );
+}
+async function getInviteLink(email) {
+  try {
+    const response = await axios.post(`${INV_SERVER_URL}/generate`, { email });
+    return response.data.link;
+  } catch (err) {
+    console.error("Error getting invite link:", err.message);
+    return null;
+  }
 }
 async function generatePDF(renderedHtml) {
   let browser;
@@ -236,7 +228,7 @@ app.post('/register', async (req, res) => {
                 basePath: path.join(__dirname, 'templates'),
               });
               const buffer = await generatePDF(renderedHtml);
-              const inviteLink = `https://aceWhatsApp.com/join-group/${ace_id}`;
+              const inviteLink = await getInviteLink(email);
               const emailBody = `<div style="font-family: Arial, sans-serif; color: #333; line-height: 1.6;">
                                 <div style="text-align: center; margin-bottom: 20px;">
                                 <img src="cid:aceLogo" alt="ACE Logo" style="max-width:150px; width:100%; height:auto; display:block; margin:0 auto;" />
@@ -311,33 +303,6 @@ app.post('/register', async (req, res) => {
     res.status(500).json({ error: 'Unknown error occurred' });
   }
 });
-app.get('/join-group/:token', (req, res) => {
-  const { token } = req.params;
-
-  db.get(`SELECT * FROM invite_tokens WHERE acid = ?`, [token], (err, row) => {
-    if (err) {
-      console.error('Token lookup error:', err.message);
-      return res.status(500).send('Internal server error.');
-    }
-
-    if (!row) {
-      return res.status(404).send('Invalid invite token.');
-    }
-
-    if (row.used) {
-      return res.status(403).send('This invite link has already been used.');
-    }
-
-    db.run(`UPDATE invite_tokens SET used = 1 WHERE acid = ?`, [token], (updateErr) => {
-      if (updateErr) {
-        console.error('Token update error:', updateErr.message);
-        return res.status(500).send('Failed to update token.');
-      }
-      return res.redirect(process.env.WHATSAPP_GROUP_LINK);
-    });
-  });
-});
-
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
