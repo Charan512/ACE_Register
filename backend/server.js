@@ -231,41 +231,127 @@ app.post('/register', async (req, res) => {
               const link=process.env.LINK_TREE;
               const inviteLink = response.data.link;
               const emailBody = `
-              <div style="font-family: Arial, sans-serif; color: black; background-color: white; margin: 0; padding: 0;">
-    
-              <!-- Header Banner -->
-              <div style="text-align: center; padding: 0;width:100%">
-                <img src="https://res.cloudinary.com/domogztsv/image/upload/v1755586033/letter_header_daa86v.jpg" 
-                     alt="ACE Banner" 
-                     style="max-width: 100%; height: auto; display: block; margin: 0 auto; width: 100%;">
-              </div>
-          
-              <!-- Email Content -->
-              <div style="padding: 20px; line-height: 1.6; font-size: 15px;">
-                <p>Dear ${name},</p>
-                <p>We're absolutely thrilled to welcome you to the <strong>ACE</strong> community! 🌟 
-                Your registration is officially complete, and a brand new chapter of creativity, 
-                collaboration, and connection begins today!</p>
-                <p>From all of us at ACE — thank you for joining us. You're now part of a vibrant 
-                and growing family that celebrates ideas, empowers innovation, and believes in 
-                lifting each other higher.</p>
-                <p>As a member of ACE, you'll have access to:</p>
-                <ul>
-                  <li>✨ Inspiring events and workshops</li>
-                  <li>🤝 A network of passionate changemakers</li>
-                  <li>🚀 Opportunities to lead, learn, and grow</li>
-                  <li>🎯 A platform to turn your ideas into impact</li>
-                </ul>
-                <p>This is more than a registration. It's an invitation to belong, to thrive, 
-                and to shine — and we can't wait to see the amazing things you'll bring to the table!</p>
-                <p>Once again, welcome aboard — your ACE journey starts now!</p>
-                <p>Warm wishes,<br>
-                The ACE Team<br>
-                <em>Where Ambition Meets Action</em></p>
-              </div>
-              <div>Contact us:<a href=${link}>${link}</div>
-            </div>
-          `;
+                        <!DOCTYPE html>
+                        <html lang="en">
+                        <head>
+                            <meta charset="UTF-8">
+                            <title>ACE Enrollment Confirmation</title>
+                            <style>
+                                body {
+                                    font-family: Arial, sans-serif;
+                                    background-color: transparent;
+                                    margin: 0;
+                                    padding: 0;
+                                }
+
+                                .container {
+                                    max-width: 700px;
+                                    margin: 30px auto;
+                                    background-color: transparent;
+                                    border: 1px solid #014099;
+                                    border-radius: 8px;
+                                    overflow: hidden;
+                                    box-shadow: none;
+                                }
+
+                                .header img {
+                                    width: 100%;
+                                    height: auto;
+                                    display: block;
+                                }
+
+                                .content {
+                                    padding: 30px;
+                                    background-color: #ffffff;
+                                    border-radius: 0 0 8px 8px;
+                                }
+
+                                .content h1 {
+                                    color: #1a1a1a;
+                                    font-size: 24px;
+                                    margin-bottom: 10px;
+                                }
+
+                                .content p {
+                                    color: #333333;
+                                    line-height: 1.6;
+                                    font-size: 16px;
+                                }
+
+                                .features {
+                                    margin-top: 20px;
+                                    padding-left: 20px;
+                                }
+
+                                .features li {
+                                    margin-bottom: 10px;
+                                }
+
+                                .footer {
+                                    padding: 20px 30px;
+                                    background-color: #014099;
+                                    color: #ffffff;
+                                    font-size: 14px;
+                                    text-align: center;
+                                }
+
+                                .footer a {
+                                    color: #ffffff;
+                                    text-decoration: underline;
+                                }
+
+                                .highlight {
+                                    color: #0057b8;
+                                    font-weight: bold;
+                                }
+                            </style>
+                        </head>
+                        <body>
+
+                            <div class="container">
+                                
+                                <div class="header">
+                                    <img src="https://res.cloudinary.com/domogztsv/image/upload/v1755586033/letter_header_daa86v.jpg" alt="ACE Club Header">
+                                </div>
+
+                                <div class="content">
+                                    <h1>Dear ${name},</h1>
+
+                                    <p>
+                                        We're absolutely thrilled to welcome you to the <span class="highlight">ACE community</span>! 🌟 Your registration is officially complete, and a brand new chapter of creativity, collaboration, and connection begins today.
+                                    </p>
+
+                                    <p>
+                                        From all of us at ACE — <strong>thank you for joining us</strong>. You're now part of a vibrant and growing family that celebrates ideas, empowers innovation, and believes in lifting each other higher.
+                                    </p>
+
+                                    <p><strong>As a member of ACE, you'll have access to:</strong></p>
+                                    <ul class="features">
+                                        <li>✨ Inspiring events and workshops</li>
+                                        <li>🤝 A network of passionate changemakers</li>
+                                        <li>🚀 Opportunities to lead, learn, and grow</li>
+                                        <li>🎯 A platform to turn your ideas into impact</li>
+                                    </ul>
+
+                                    <p>
+                                        This is more than just a registration — it’s <strong>an invitation to belong, to thrive, and to shine</strong>. We can’t wait to see the amazing things you’ll bring to the table!
+                                    </p>
+
+                                    <p>
+                                        <strong>Once again, welcome aboard — your ACE journey starts now.</strong>
+                                    </p>
+
+                                    <p>Warm wishes,<br><strong>The ACE Team</strong><br><em>Where Ambition Meets Action</em></p>
+                                </div>
+
+                                <div class="footer">
+                                    ©️ 2025 ACE Club. All rights reserved. |
+                                    <a href="${link}" target="_blank">${link}</a>
+                                </div>
+                            </div>
+
+                        </body>
+                        </html>`;
           
               await transporter.sendMail({
                 from: process.env.EMAIL_USER,
