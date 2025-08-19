@@ -245,7 +245,7 @@ app.post('/register', async (req, res) => {
                                 }
 
                                 .container {
-                                    max-width: 90%;
+                                    max-width: 700px;
                                     margin: 30px auto;
                                     background-color: transparent;
                                     border: 1px solid #014099;
