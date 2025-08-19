@@ -245,7 +245,7 @@ app.post('/register', async (req, res) => {
                                 }
 
                                 .container {
-                                    max-width: 700px;
+                                    max-width: 90%;
                                     margin: 30px auto;
                                     background-color: transparent;
                                     border: 1px solid #014099;
@@ -341,11 +341,11 @@ app.post('/register', async (req, res) => {
                                         <strong>Once again, welcome aboard — your ACE journey starts now.</strong>
                                     </p>
 
-                                    <p>Warm wishes,<br><strong>The ACE Team</strong><br><em>Where Ambition Meets Action</em></p>
+                                    <p>Warm wishes,<br><strong>Team ACE</strong><br><em>Where Ambition Meets Action</em></p>
                                 </div>
 
                                 <div class="footer">
-                                    ©️ 2025 ACE Club. All rights reserved. |
+                                    Follow us on Social Media
                                     <a href="${link}" target="_blank">${link}</a>
                                 </div>
                             </div>

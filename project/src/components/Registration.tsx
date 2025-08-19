@@ -49,7 +49,7 @@ const Registration = () => {
     } = formData;
 
     if (
-      !fullName || !email || !phone || !department || !year ||
+      !fullName || !phone || !department || !year ||
       !gender || interests.length === 0 || !paymentMode || !goodies
     ) {
       alert('Please fill in all required fields');
