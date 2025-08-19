@@ -261,11 +261,6 @@ app.post('/register', async (req, res) => {
                 <p>Warm wishes,<br>
                 The ACE Team<br>
                 <em>Where Ambition Meets Action</em></p>
-                <p>Join our WhatsApp group: 
-                  <a href="${inviteLink}" style="color: #0078D7; text-decoration: none;">${inviteLink}</a>
-                </p>
-          
-                <p><b>This is one time use link — make sure to join in first try!!!</b></p>
               </div>
             </div>
           `;

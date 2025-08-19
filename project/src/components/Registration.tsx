@@ -202,7 +202,7 @@ const Registration = () => {
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-3">Year of Study *</label>
               <div className="space-y-2">
-                {["1 Year Freshers", "2 Year Laterals"].map(year => (
+                {["1st Year Freshers", "2nd Year Laterals"].map(year => (
                   <label key={year} className="flex items-center">
                     <input
                       type="radio"
