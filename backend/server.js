@@ -228,15 +228,16 @@ app.post('/register', async (req, res) => {
               });
               const buffer = await generatePDF(renderedHtml);
               const response = await axios.get(`${process.env.INV_SERVER_URL}/generate`);
+              const link=process.env.LINK_TREE;
               const inviteLink = response.data.link;
               const emailBody = `
               <div style="font-family: Arial, sans-serif; color: black; background-color: white; margin: 0; padding: 0;">
     
               <!-- Header Banner -->
-              <div style="text-align: center; padding: 0; margin: 0;">
+              <div style="text-align: center; padding: 0;width:100%">
                 <img src="https://res.cloudinary.com/domogztsv/image/upload/v1755586033/letter_header_daa86v.jpg" 
                      alt="ACE Banner" 
-                     style="max-width: 100%; height: auto; display: block; margin: 0 auto; width: 600px;">
+                     style="max-width: 100%; height: auto; display: block; margin: 0 auto; width: 100%;">
               </div>
           
               <!-- Email Content -->
@@ -262,6 +263,7 @@ app.post('/register', async (req, res) => {
                 The ACE Team<br>
                 <em>Where Ambition Meets Action</em></p>
               </div>
+              <div>Contact us:<a href=${link}>${link}</div>
             </div>
           `;
           
@@ -271,7 +273,7 @@ app.post('/register', async (req, res) => {
                 subject: 'ACE Registration Confirmation with Certificate',
                 html: emailBody,
                 attachments: [{
-                  filename: 'certificate.pdf',
+                  filename: `${ace_id}_enrollment.pdf`,
                   content: buffer,
                   contentType: 'application/pdf',
                 }],
