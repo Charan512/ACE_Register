@@ -234,7 +234,7 @@ app.post('/register', async (req, res) => {
     
               <!-- Header Banner -->
               <div style="text-align: center; padding: 0; margin: 0;">
-                <img src="" 
+                <img src="https://res.cloudinary.com/domogztsv/image/upload/v1755586033/letter_header_daa86v.jpg" 
                      alt="ACE Banner" 
                      style="max-width: 100%; height: auto; display: block; margin: 0 auto; width: 600px;">
               </div>
