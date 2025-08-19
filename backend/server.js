@@ -230,9 +230,24 @@ app.post('/register', async (req, res) => {
               const response = await axios.get(`${process.env.INV_SERVER_URL}/generate`);
               const inviteLink = response.data.link;
               const emailBody = `
+              <div style="font-family: Arial, sans-serif; color: black; background-color: white; margin: 0; padding: 0;">
+    
+              <!-- Header Banner -->
+              <div style="text-align: center; padding: 0; margin: 0;">
+                <img src="" 
+                     alt="ACE Banner" 
+                     style="max-width: 100%; height: auto; display: block; margin: 0 auto; width: 600px;">
+              </div>
+          
+              <!-- Email Content -->
+              <div style="padding: 20px; line-height: 1.6; font-size: 15px;">
                 <p>Dear ${name},</p>
-                <p>We're absolutely thrilled to welcome you to the <strong>ACE</strong> community! 🌟 Your registration is officially complete, and a brand new chapter of creativity, collaboration, and connection begins today!</p>
-                <p>From all of us at ACE — thank you for joining us. You're now part of a vibrant and growing family that celebrates ideas, empowers innovation, and believes in lifting each other higher.</p>
+                <p>We're absolutely thrilled to welcome you to the <strong>ACE</strong> community! 🌟 
+                Your registration is officially complete, and a brand new chapter of creativity, 
+                collaboration, and connection begins today!</p>
+                <p>From all of us at ACE — thank you for joining us. You're now part of a vibrant 
+                and growing family that celebrates ideas, empowers innovation, and believes in 
+                lifting each other higher.</p>
                 <p>As a member of ACE, you'll have access to:</p>
                 <ul>
                   <li>✨ Inspiring events and workshops</li>
@@ -240,12 +255,21 @@ app.post('/register', async (req, res) => {
                   <li>🚀 Opportunities to lead, learn, and grow</li>
                   <li>🎯 A platform to turn your ideas into impact</li>
                 </ul>
-                <p>This is more than a registration. It's an invitation to belong, to thrive, and to shine — and we can't wait to see the amazing things you'll bring to the table!</p>
+                <p>This is more than a registration. It's an invitation to belong, to thrive, 
+                and to shine — and we can't wait to see the amazing things you'll bring to the table!</p>
                 <p>Once again, welcome aboard — your ACE journey starts now!</p>
-                <p>Warm wishes,<br>The ACE Team<br><em>Where Ambition Meets Action</em></p>
-                <p>Join our WhatsApp group: <a href="${inviteLink}">${inviteLink}</a></p>
-                <p><b>This is one time use link make sure to join in first try!!!</b></p>
-              `;
+                <p>Warm wishes,<br>
+                The ACE Team<br>
+                <em>Where Ambition Meets Action</em></p>
+                <p>Join our WhatsApp group: 
+                  <a href="${inviteLink}" style="color: #0078D7; text-decoration: none;">${inviteLink}</a>
+                </p>
+          
+                <p><b>This is one time use link — make sure to join in first try!!!</b></p>
+              </div>
+            </div>
+          `;
+          
               await transporter.sendMail({
                 from: process.env.EMAIL_USER,
                 to: email,
