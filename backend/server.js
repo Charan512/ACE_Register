@@ -131,28 +131,39 @@ async function generatePDF(renderedHtml) {
 app.post('/register', async (req, res) => {
   try {
     const formData = req.body;
-    db.get(`SELECT * FROM registrations WHERE phone = ?`, [formData.phone], (err, existing) => {
+    const {
+      name, email, phone, branch, gender,
+      year, interests, payment, goodies
+    } = formData;
+
+
+    db.get(`SELECT * FROM registrations WHERE phone = ?`, [phone], (err, existing) => {
       if (err) {
         console.error('Phone lookup error:', err.message);
         return res.status(500).json({ error: 'Database error while checking phone' });
       }
+
       if (existing) {
+        console.log(`Duplicate phone detected: ${phone}`);
+
         return res.status(409).json({ error: 'Phone number already registered' });
       }
+
+
       generateACEID(async (err, ace_id) => {
         if (err) {
           console.error('ACE ID Error:', err.message);
           return res.status(500).json({ error: 'ACE ID generation failed' });
         }
-        const {
-          name, email, phone, branch, gender,
-          year, interests, payment, goodies
-        } = formData;
+
         const timestamp = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
+
         const insertQuery = `
           INSERT INTO registrations (ace_id, name, email, phone, branch, gender, year, interests, payment, goodies, timestamp)
           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
+
+
         db.run(
           insertQuery,
           [
@@ -164,7 +175,9 @@ app.post('/register', async (req, res) => {
               console.error('DB insert error:', err.message);
               return res.status(500).json({ error: 'Failed to insert into DB' });
             }
+
             try {
+              // 🔹 Step 4: Update Google Sheets
               const sheetId = process.env.SHEET_ID;
               await sheets.spreadsheets.values.append({
                 spreadsheetId: sheetId,
@@ -190,11 +203,14 @@ app.post('/register', async (req, res) => {
               console.error('Google Sheets error:', sheetError.message);
               return res.status(500).json({ error: 'Failed to update Google Sheet' });
             }
+
             try {
+
               const templatePath = path.join(__dirname, 'templates', 'certificate.html');
               let htmlContent = fs.readFileSync(templatePath, 'utf8');
               const assetsPath = path.join(__dirname, 'templates');
               const imageFiles = ['bg1.jpg', 'hod_sign.png', 'sec_sign.png'];
+              
               for (const imageFile of imageFiles) {
                 try {
                   const imagePath = path.join(assetsPath, imageFile);
@@ -213,6 +229,7 @@ app.post('/register', async (req, res) => {
                   console.error(`Error processing image ${imageFile}:`, err);
                 }
               }
+              
               const renderedHtml = ejs.render(htmlContent, {
                 ace_id,
                 name,
@@ -226,10 +243,12 @@ app.post('/register', async (req, res) => {
                 payment,
                 basePath: path.join(__dirname, 'templates'),
               });
+              
               const buffer = await generatePDF(renderedHtml);
               const response = await axios.get(`${process.env.INV_SERVER_URL}/generate`);
-              const link=process.env.LINK_TREE;
               const inviteLink = response.data.link;
+              const link = process.env.LINK_TREE;
+              
               const emailBody = `
                         <!DOCTYPE html>
                         <html lang="en">
@@ -379,7 +398,6 @@ app.post('/register', async (req, res) => {
     res.status(500).json({ error: 'Unknown error occurred' });
   }
 });
-
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
